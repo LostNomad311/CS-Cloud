@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CSCloud.Data" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CSCloud.Data" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/CSCloud.Enums" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfCSCloudCommandRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CSCloudCommandRecord" nillable="true" type="tns:CSCloudCommandRecord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCSCloudCommandRecord" nillable="true" type="tns:ArrayOfCSCloudCommandRecord" />
+  <xs:complexType name="CSCloudCommandRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ClientName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/CSCloud.Enums" minOccurs="0" name="Code" type="q1:CSCloudCommandCode" />
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/CSCloud.Enums" minOccurs="0" name="Result" type="q2:CSCloudResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CSCloudCommandRecord" nillable="true" type="tns:CSCloudCommandRecord" />
+  <xs:complexType name="ArrayOfCSCloudClientRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CSCloudClientRecord" nillable="true" type="tns:CSCloudClientRecord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCSCloudClientRecord" nillable="true" type="tns:ArrayOfCSCloudClientRecord" />
+  <xs:complexType name="CSCloudClientRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ClientName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsActive" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CSCloudClientRecord" nillable="true" type="tns:CSCloudClientRecord" />
+  <xs:complexType name="CSCloudRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ClientName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Command" nillable="true" type="tns:CSCloudCommand" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CSCloudRequest" nillable="true" type="tns:CSCloudRequest" />
+  <xs:complexType name="CSCloudCommand">
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/CSCloud.Enums" minOccurs="0" name="Code" type="q3:CSCloudCommandCode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CSCloudCommand" nillable="true" type="tns:CSCloudCommand" />
+  <xs:complexType name="CSCloudResponse">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Messages" nillable="true" type="q4:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Request" nillable="true" type="tns:CSCloudRequest" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/CSCloud.Enums" minOccurs="0" name="Result" type="q5:CSCloudResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CSCloudResponse" nillable="true" type="tns:CSCloudResponse" />
+</xs:schema>

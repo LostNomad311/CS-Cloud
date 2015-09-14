@@ -1,0 +1,25 @@
+﻿@using CSCloudAdmin.CSCloudServerProxy;
+@{
+    ViewBag.Title = "Monitor Clients";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Clients</h2>
+
+<ul>
+    @foreach (CSCloudClientRecord client in ViewBag.Clients)
+    {
+        <li>
+            @string.Format("{0}", client.ClientName);
+
+            <ul>
+                @foreach (CSCloudCommandRecord command in ViewBag.Commands)
+                {
+                    <li>
+                        @string.Format("{0} - {1} - {2}", command.Date, command.Code, command.Result);
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>

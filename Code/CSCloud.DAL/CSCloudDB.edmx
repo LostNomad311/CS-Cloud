@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CSCloudModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Command">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="Result" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommandParameter">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="CommandID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Value" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Severity" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Message" Type="varchar(max)" Nullable="false" />
+          <Property Name="StackTrace" Type="varchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CSCloud.dbo.vwCommand' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwCommand">
+          <Key>
+            <PropertyRef Name="ClientName" />
+          </Key>
+          <Property Name="ClientName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="CommandResult" Type="varchar" MaxLength="10" />
+          <Property Name="CommandCode" Type="varchar" MaxLength="10" />
+          <Property Name="CommandDate" Type="datetime" />
+          <Property Name="ParameterName" Type="varchar" MaxLength="250" />
+          <Property Name="ParameterValue" Type="varchar(max)" />
+        </EntityType>
+        <Association Name="FK_Command_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Command" Type="Self.Command" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Command">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommandParameter_Command">
+          <End Role="Command" Type="Self.Command" Multiplicity="1" />
+          <End Role="CommandParameter" Type="Self.CommandParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Command">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CommandParameter">
+              <PropertyRef Name="CommandID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CSCloudModelStoreContainer">
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Command" EntityType="Self.Command" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommandParameter" EntityType="Self.CommandParameter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vwCommand" EntityType="Self.vwCommand" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwCommand].[ClientName] AS [ClientName], 
+    [vwCommand].[CommandResult] AS [CommandResult], 
+    [vwCommand].[CommandCode] AS [CommandCode], 
+    [vwCommand].[CommandDate] AS [CommandDate], 
+    [vwCommand].[ParameterName] AS [ParameterName], 
+    [vwCommand].[ParameterValue] AS [ParameterValue]
+    FROM [dbo].[vwCommand] AS [vwCommand]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Command_Client" Association="Self.FK_Command_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Command" EntitySet="Command" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommandParameter_Command" Association="Self.FK_CommandParameter_Command">
+            <End Role="Command" EntitySet="Command" />
+            <End Role="CommandParameter" EntitySet="CommandParameter" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CSCloudModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Commands" Relationship="Self.FK_Command_Client" FromRole="Client" ToRole="Command" />
+        </EntityType>
+        <EntityType Name="Command">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="ClientID" Type="Int32" Nullable="false" />
+          <Property Name="Result" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Command_Client" FromRole="Command" ToRole="Client" />
+          <NavigationProperty Name="CommandParameters" Relationship="Self.FK_CommandParameter_Command" FromRole="Command" ToRole="CommandParameter" />
+        </EntityType>
+        <EntityType Name="CommandParameter">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="CommandID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Command" Relationship="Self.FK_CommandParameter_Command" FromRole="CommandParameter" ToRole="Command" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Severity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vwCommand">
+          <Key>
+            <PropertyRef Name="ClientName" />
+          </Key>
+          <Property Name="ClientName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CommandResult" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CommandCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CommandDate" Type="DateTime" Precision="3" />
+          <Property Name="ParameterName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ParameterValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Command_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Command" Type="Self.Command" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Command">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommandParameter_Command">
+          <End Role="Command" Type="Self.Command" Multiplicity="1" />
+          <End Role="CommandParameter" Type="Self.CommandParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Command">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CommandParameter">
+              <PropertyRef Name="CommandID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CSCloudEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <EntitySet Name="Commands" EntityType="Self.Command" />
+          <EntitySet Name="CommandParameters" EntityType="Self.CommandParameter" />
+          <EntitySet Name="Logs" EntityType="Self.Log" />
+          <EntitySet Name="vwCommands" EntityType="Self.vwCommand" />
+          <AssociationSet Name="FK_Command_Client" Association="Self.FK_Command_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Command" EntitySet="Commands" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommandParameter_Command" Association="Self.FK_CommandParameter_Command">
+            <End Role="Command" EntitySet="Commands" />
+            <End Role="CommandParameter" EntitySet="CommandParameters" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CSCloudModelStoreContainer" CdmEntityContainer="CSCloudEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="CSCloudModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Commands">
+            <EntityTypeMapping TypeName="CSCloudModel.Command">
+              <MappingFragment StoreEntitySet="Command">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommandParameters">
+            <EntityTypeMapping TypeName="CSCloudModel.CommandParameter">
+              <MappingFragment StoreEntitySet="CommandParameter">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="CommandID" ColumnName="CommandID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="CSCloudModel.Log">
+              <MappingFragment StoreEntitySet="Log">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Severity" ColumnName="Severity" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwCommands">
+            <EntityTypeMapping TypeName="CSCloudModel.vwCommand">
+              <MappingFragment StoreEntitySet="vwCommand">
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+                <ScalarProperty Name="CommandResult" ColumnName="CommandResult" />
+                <ScalarProperty Name="CommandCode" ColumnName="CommandCode" />
+                <ScalarProperty Name="CommandDate" ColumnName="CommandDate" />
+                <ScalarProperty Name="ParameterName" ColumnName="ParameterName" />
+                <ScalarProperty Name="ParameterValue" ColumnName="ParameterValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

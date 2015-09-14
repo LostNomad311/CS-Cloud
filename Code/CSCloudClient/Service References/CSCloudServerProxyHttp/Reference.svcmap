@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="55123d81-568d-4ca3-835e-0982a4efa87c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="CSCloud" />
+    </ReferencedAssemblies>
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8889/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="126c1603-3f02-4fda-8452-b4756c4314aa" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="cb001a62-c649-4ef8-8bbf-e0209008956c" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="5e2dde56-fa34-4cd1-899b-02b639aba706" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+    <MetadataFile FileName="CSCloud.Data.xsd" MetadataType="Schema" ID="72c7223a-cc28-4b45-805a-187e4fd436a4" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+    <MetadataFile FileName="CSCloud.Enums.xsd" MetadataType="Schema" ID="b94ecd33-6907-44b9-82b3-e27d09501c22" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="19443d85-f6c0-4e72-b5f6-df9815724e36" SourceId="1" SourceUrl="http://localhost:8889/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

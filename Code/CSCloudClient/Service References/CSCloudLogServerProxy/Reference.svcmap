@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f8894764-c423-4fe3-b9af-8a86d69ed8f6" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CSCloudLogService1.xsd" MetadataType="Schema" ID="5239d001-83bf-4460-b7d4-9101df079c60" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?xsd=xsd1" />
+    <MetadataFile FileName="CSCloudLogService2.xsd" MetadataType="Schema" ID="b012e693-36e3-411a-89fa-20bc04b4de93" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?xsd=xsd2" />
+    <MetadataFile FileName="CSCloudLogService3.xsd" MetadataType="Schema" ID="a71793b2-f378-424a-b6be-0b5938adb488" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?xsd=xsd3" />
+    <MetadataFile FileName="CSCloudLogService.disco" MetadataType="Disco" ID="747f771f-0da6-4da4-ae4d-47e80e532480" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?disco" />
+    <MetadataFile FileName="CSCloudLogService.wsdl" MetadataType="Wsdl" ID="606ea877-3b46-4204-8ac7-c3c7149c21a5" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?wsdl" />
+    <MetadataFile FileName="CSCloudLogService.xsd" MetadataType="Schema" ID="6bc5d690-2b8f-48d4-bc8d-2a6dd9c1c3e5" SourceId="1" SourceUrl="http://localhost:8891/CSCloudLogService/CSCloudLogService.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

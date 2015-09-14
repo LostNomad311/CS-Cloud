@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CSCloud.Enums" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CSCloud.Enums" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="CSCloudCommandCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CONNECT" />
+      <xs:enumeration value="COMPILE" />
+      <xs:enumeration value="TEST" />
+      <xs:enumeration value="REPORT" />
+      <xs:enumeration value="DISCONNECT" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CSCloudCommandCode" nillable="true" type="tns:CSCloudCommandCode" />
+  <xs:simpleType name="CSCloudResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS" />
+      <xs:enumeration value="ERROR" />
+      <xs:enumeration value="PENDING" />
+      <xs:enumeration value="WARNIG" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CSCloudResult" nillable="true" type="tns:CSCloudResult" />
+</xs:schema>

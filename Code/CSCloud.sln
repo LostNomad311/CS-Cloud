@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloudAdmin", "CSCloudAdmin\CSCloudAdmin.csproj", "{CA712A38-F7BA-492F-94B1-22B97E15CA8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloudClient", "CSCloudClient\CSCloudClient.csproj", "{8D48C77E-CC59-417F-950F-1A5C191F03ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2} = {A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloudServer", "CSCloudServer\CSCloudServer.csproj", "{D79BC57B-1475-4EE2-93E2-315E9DC39AC9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2} = {A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloud", "CSCloud\CSCloud.csproj", "{C0555F20-C854-4313-8118-F7059485F741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloudLogServer", "CSCloudLogServer\CSCloudLogServer.csproj", "{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCloud.DAL", "CSCloud.DAL\CSCloud.DAL.csproj", "{646A8CA2-8D86-43B1-9109-61862BA90620}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA712A38-F7BA-492F-94B1-22B97E15CA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA712A38-F7BA-492F-94B1-22B97E15CA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA712A38-F7BA-492F-94B1-22B97E15CA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA712A38-F7BA-492F-94B1-22B97E15CA8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D48C77E-CC59-417F-950F-1A5C191F03ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D48C77E-CC59-417F-950F-1A5C191F03ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D48C77E-CC59-417F-950F-1A5C191F03ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D48C77E-CC59-417F-950F-1A5C191F03ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D79BC57B-1475-4EE2-93E2-315E9DC39AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79BC57B-1475-4EE2-93E2-315E9DC39AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79BC57B-1475-4EE2-93E2-315E9DC39AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79BC57B-1475-4EE2-93E2-315E9DC39AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0555F20-C854-4313-8118-F7059485F741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0555F20-C854-4313-8118-F7059485F741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0555F20-C854-4313-8118-F7059485F741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0555F20-C854-4313-8118-F7059485F741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0C4942A-2406-4AB5-8053-7AB37BEDD3A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646A8CA2-8D86-43B1-9109-61862BA90620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646A8CA2-8D86-43B1-9109-61862BA90620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646A8CA2-8D86-43B1-9109-61862BA90620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646A8CA2-8D86-43B1-9109-61862BA90620}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

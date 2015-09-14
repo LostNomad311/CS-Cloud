@@ -1,0 +1,16 @@
+﻿@using CSCloudAdmin.CSCloudLogServerProxy;
+@{
+    ViewBag.Title = "View Log";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Log</h2>
+
+<ul>
+    @foreach (CSCloudLogEntry logEntry in ViewBag.Log)
+    {
+        <li>
+            @string.Format("{0} - [{1}] - {2} {3}", logEntry.Date, logEntry.Severity, logEntry.Message, logEntry.StackTrace);
+        </li>
+    }
+</ul>

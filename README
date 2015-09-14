@@ -1,0 +1,56 @@
+
+TO SETUP THE DATABASE
+---
+
+Sql scripts must be executed in the following sequence:
+DB_CSCloud.sql
+Table_Log.sql
+Table_Client.sql
+Table_Command.sql
+Table_CommandParameter.sql
+vwCommand.sql
+
+
+
+TO EXECUTE
+---
+
+Applications must be launched in the following sequences:
+
+Executing CS Cloud Clients:
+CSCloudLogServer ( WCF web service , can be hosted in IIS or debugged in Visual Studio )
+CSCloudServer
+CSCloudClient
+
+Executing CS Cloud Admin:
+CSCloudLogServer ( WCF web service , can be hosted in IIS or debugged in Visual Studio )
+CSCloudServer ( optional as the client monitoring functionality is not yet testable )
+CSCloudAdmin
+
+
+
+TESTABLE FUNCTIONALITY
+---
+
+CS Cloud Log Server ( complete )
+-Log commands to the DB
+-Provide a list of log entries web service
+
+CS Cloud Server ( incomplete )
+-Accept client connects
+-Send clients commands ( will not complete the command workflow )
+-Log messages and errors to CS Log Server
+-Persist some commands to the DB
+
+CS Cloud Admin ( incomplete )
+-Display list of logs obtained from from CS Cloud Log Server
+
+CS Cloud Client
+-Connect to CS Cloud Server
+-Log to CS Cloud Log Server
+-Response to CS Cloud Server commands ( does not perform the commands )
+
+Incomplete Tasks
+-Compile solution from command line
+-Wink recording
+-Creation of project(s) for CS Cloud Clients to compile and test
