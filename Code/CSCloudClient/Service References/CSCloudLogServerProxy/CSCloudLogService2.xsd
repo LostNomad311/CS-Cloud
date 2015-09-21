@@ -4,11 +4,16 @@
   <xs:complexType name="CSCloudLogEntry">
     <xs:sequence>
       <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="ID" type="xs:int" />
       <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/CSCloud.Enums" minOccurs="0" name="Severity" type="q1:CSCloudSeverity" />
       <xs:element minOccurs="0" name="StackTrace" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="CSCloudLogEntry" nillable="true" type="tns:CSCloudLogEntry" />
+  <xs:complexType name="ArrayOfCSCloudLogEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CSCloudLogEntry" nillable="true" type="tns:CSCloudLogEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCSCloudLogEntry" nillable="true" type="tns:ArrayOfCSCloudLogEntry" />
 </xs:schema>

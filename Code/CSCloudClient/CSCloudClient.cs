@@ -1,14 +1,8 @@
 ﻿using CSCloud.Data;
-using CSCloud.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.ServiceModel;
+using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace CSCloudClient
 {
@@ -17,14 +11,8 @@ namespace CSCloudClient
         public const string KEY_PASSWORD = "password";
 
         private CSCloudServerProxyHttp.ICSCloudServer server;
-        private static CSCloudLogServerProxy.ICSCloudLogService logService;
+        private CSCloudLogServerProxy.ICSCloudLogService logService;
 
-        static CSCloudClient()
-        {
-            logService = new CSCloudLogServerProxy.CSCloudLogServiceClient();
-        }
-
-        //string ICSCloudClient.GetName()
         public string GetName()
         {
             return string.Format("{0}_{1:yyMMdd}_{1:HHmmss}", Environment.MachineName, DateTime.UtcNow);
@@ -96,42 +84,27 @@ namespace CSCloudClient
             string err = string.Format("Invalid command: {0}", request.Command.Code.ToString());
             response.Messages = new string[] { err };
 
-            logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR);
+            LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR);
 
             return response;
         }
 
-        private static void logResponse(CSCloudResponse response, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
-        {
-            CSCloudLogEntry log = new CSCloudLogEntry();
-            log.Date = DateTime.UtcNow;
-            log.Severity = severity;
-            StringBuilder sb = new StringBuilder();
-            if (message != null) sb.AppendLine().Append(message);
-            else sb.Append(response.ToString());
-            if (stackTrace != null) sb.AppendLine().AppendLine(stackTrace);
-            log.Message = sb.ToString();
-            logService.Log(log);
-        }
-
         private CSCloudResponse Compile(CSCloudRequest request)
         {
-            //throw new NotImplementedException();
             CSCloudResponse response = new CSCloudResponse();
             response.Request = request;
 
             try
             {
-                Console.WriteLine("Compiled stuff..."); //TODO JBG
                 response.Result = CSCloud.Enums.CSCloudResult.SUCCESS;
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
                 //TODO JBG Success with warning condition
             }
             catch (Exception ex)
             {
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR;
                 response.Messages = new string[] { ex.Message };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
             }
 
             return response;
@@ -144,16 +117,15 @@ namespace CSCloudClient
 
             try
             {
-                Console.WriteLine("Tested stuff..."); //TODO JBG
-                response.Result = CSCloud.Enums.CSCloudResult.SUCCESS;
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+                response.Result = CSCloud.Enums.CSCloudResult.WARNIG; //TODO JBG Testing
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
                 //TODO JBG Success with warning condition
             }
             catch (Exception ex)
             {
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR;
                 response.Messages = new string[] { ex.Message };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
             }
 
             return response;
@@ -166,16 +138,15 @@ namespace CSCloudClient
 
             try
             {
-                Console.WriteLine("Nothing to report..."); //TODO JBG
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR; //TODO JBG Testing
-                response.Messages = new string[] { "Nothing to report..." };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+                response.Messages = new string[] { "Nothing to report..." }; //TODO JBG
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
             }
             catch (Exception ex)
             {
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR;
                 response.Messages = new string[] { ex.Message };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
             }
 
             return response;
@@ -189,22 +160,25 @@ namespace CSCloudClient
             try
             {
                 response.Result = CSCloud.Enums.CSCloudResult.SUCCESS;
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
-                server.Disconnect();
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+                server.Disconnect(this.GetName());
             }
             catch (Exception ex)
             {
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR;
                 response.Messages = new string[] { ex.Message };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
             }
 
             return response;
         }
 
-        public bool Connect(CSCloudServerProxyHttp.ICSCloudServer server)
+        public CSCloudResponse Connect(CSCloudServerProxyHttp.ICSCloudServer server, CSCloudLogServerProxy.ICSCloudLogService logService)
         {
+            if (server == null) throw new ArgumentNullException("server");
+
             this.server = server;
+            this.logService = logService;
 
             CSCloudResponse response = new CSCloudResponse();
             CSCloudRequest request = new CSCloudRequest();
@@ -217,17 +191,69 @@ namespace CSCloudClient
             try
             {
                 connected = server.Connect(this.GetName(), ConfigurationManager.AppSettings[KEY_PASSWORD]);
-                response.Result = CSCloud.Enums.CSCloudResult.SUCCESS;
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+
+                if (connected)
+                {
+                    if (logService == null)
+                    {
+                        response.Result = CSCloud.Enums.CSCloudResult.WARNIG;
+                        var msg = string.Format("No Log Service is available , client {0} can not log it's activities", this.GetName());
+                        response.Messages = new string[] { msg };
+
+                        Debug.WriteLine(msg);
+                    }
+                    else
+                    {
+                        response.Result = CSCloud.Enums.CSCloudResult.SUCCESS;
+                        LogResponse(response, CSCloud.Enums.CSCloudSeverity.INFO);
+                    }
+                }
+                else
+                {
+                    response.Result = CSCloud.Enums.CSCloudResult.ERROR;
+                    LogResponse(response, CSCloud.Enums.CSCloudSeverity.WARNING); //TODO JBG Decide on how conditions like these are logged
+                }
             }
             catch (Exception ex)
             {
                 response.Result = CSCloud.Enums.CSCloudResult.ERROR;
                 response.Messages = new string[] { ex.Message };
-                logResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
+                LogResponse(response, CSCloud.Enums.CSCloudSeverity.ERROR, response.ToString(), ex.StackTrace);
             }
 
-            return connected;
+            return response;
+        }
+
+        public void LogResponse(CSCloudResponse response, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
+        {
+            if (logService == null) return;
+
+            try
+            {
+                if (response == null) throw new ArgumentNullException("response");
+
+                logService.Log(CSCloudLogEntry.FromResponse(response, severity, message, stackTrace));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(string.Format("Could not log response to Log Service: {2}\n{0}\n{1}", ex.Message, ex.StackTrace, response.ToString()));
+            }
+        }
+
+        public void LogRequest(CSCloudRequest request, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
+        {
+            if (logService == null) return;
+
+            try
+            {
+                if (request == null) throw new ArgumentNullException("request");
+
+                logService.Log(CSCloudLogEntry.FromRequest(request, severity, message, stackTrace));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(string.Format("Could not log request to Log Service: {2}\n{0}\n{1}", ex.Message, ex.StackTrace, request.ToString()));
+            }
         }
 
     }

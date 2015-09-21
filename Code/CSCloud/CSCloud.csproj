@@ -50,6 +50,7 @@
     <Compile Include="Enums\CSCloudCommandCode.cs" />
     <Compile Include="Enums\CSCloudSeverity.cs" />
     <Compile Include="Enums\CSCloudResult.cs" />
+    <Compile Include="Extensions\CSCloudLogServerExts.cs" />
     <Compile Include="Interfaces\ICSCloudClient.cs" />
     <Compile Include="Interfaces\ICSCloudLogService.cs" />
     <Compile Include="Interfaces\ICSCloudServer.cs" />
@@ -57,6 +58,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist "$(OutDir)" del "$(OutDir)"
+if exist "obj\Debug\" del "obj\Debug\"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

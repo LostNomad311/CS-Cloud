@@ -39,7 +39,6 @@ namespace CSCloudLogServer
             return new CSCloudLogEntry
             {
                 Date = log.Date,
-                ID = log.id,
                 Message = log.Message,
                 Severity = (CSCloud.Enums.CSCloudSeverity)Enum.Parse(typeof(CSCloud.Enums.CSCloudSeverity), log.Severity, true),
                 StackTrace = log.StackTrace

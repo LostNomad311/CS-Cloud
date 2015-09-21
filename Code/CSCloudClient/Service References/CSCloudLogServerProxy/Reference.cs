@@ -20,6 +20,12 @@ namespace CSCloudClient.CSCloudLogServerProxy {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICSCloudLogService/Log")]
         System.Threading.Tasks.Task LogAsync(CSCloud.Data.CSCloudLogEntry logEntry);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICSCloudLogService/GetLog", ReplyAction="http://tempuri.org/ICSCloudLogService/GetLogResponse")]
+        CSCloud.Data.CSCloudLogEntry[] GetLog();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICSCloudLogService/GetLog", ReplyAction="http://tempuri.org/ICSCloudLogService/GetLogResponse")]
+        System.Threading.Tasks.Task<CSCloud.Data.CSCloudLogEntry[]> GetLogAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -55,6 +61,14 @@ namespace CSCloudClient.CSCloudLogServerProxy {
         
         public System.Threading.Tasks.Task LogAsync(CSCloud.Data.CSCloudLogEntry logEntry) {
             return base.Channel.LogAsync(logEntry);
+        }
+        
+        public CSCloud.Data.CSCloudLogEntry[] GetLog() {
+            return base.Channel.GetLog();
+        }
+        
+        public System.Threading.Tasks.Task<CSCloud.Data.CSCloudLogEntry[]> GetLogAsync() {
+            return base.Channel.GetLogAsync();
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using CSCloud.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace CSCloud.Data
 {
@@ -19,7 +13,7 @@ namespace CSCloud.Data
 
         public override string ToString()
         {
-            return string.Format("Command: {0}", this.Command.ToString());
+            return Command == null ? string.Empty : string.Format("Command: {0}", this.Command.ToString());
         }
     }
 }

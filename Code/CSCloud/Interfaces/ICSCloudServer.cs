@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSCloud.Data;
 using System.ServiceModel;
-using CSCloud.Data;
 
 namespace CSCloud.Interfaces
 {
@@ -15,7 +10,7 @@ namespace CSCloud.Interfaces
         bool Connect(string clientName, string password);
 
         [OperationContract(IsInitiating = false, IsTerminating = true, IsOneWay = true)]
-        void Disconnect();
+        void Disconnect(string ClientName);
 
         [OperationContract]
         CSCloudCommandRecord[] GetExecutedCommands();

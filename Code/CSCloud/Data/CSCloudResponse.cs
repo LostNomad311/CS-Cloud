@@ -1,11 +1,6 @@
 ﻿using CSCloud.Enums;
-using CSCloud.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CSCloud.Data
 {
@@ -23,10 +18,9 @@ namespace CSCloud.Data
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(string.Format("Request: {0} - Result {1} - Messages:",
-                this.Request.ToString(),
-                this.Result.ToString()));
-            if (this.Messages != null) sb.AppendLine().AppendLine(string.Join("\n", this.Messages));
+            StringBuilder sb = new StringBuilder(string.Format("Result {0}", this.Result.ToString()));
+            if (Request != null) sb.Append(string.Format(" - Request: {0}", this.Request.ToString()));
+            if (this.Messages != null) sb.Append(" - Messages:").AppendLine().AppendLine(string.Join("\n", this.Messages));
             return sb.ToString();
         }
     }
