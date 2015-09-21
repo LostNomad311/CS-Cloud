@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -23,7 +24,9 @@ namespace CSCloudServer
 
         public readonly string[] CommandWorkFlow;
         public readonly int CommandDelay;
+
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
+        public event EventHandler<ClientConnectedEventArgs> ClientDisconnected;
         public event EventHandler<CommandSentEventArgs> CommandSent;
 
         private static CSCloudLogServerProxy.ICSCloudLogService logService;
@@ -56,7 +59,7 @@ namespace CSCloudServer
             if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(clientName)
                 || !string.Equals(password, serverPw, StringComparison.InvariantCulture))
             {
-                logRequest(request, CSCloudSeverity.WARNING, "Invalid client credentials.");
+                LogRequest(request, CSCloudSeverity.WARNING, "Invalid client credentials.");
                 return false;
             }
 
@@ -64,12 +67,12 @@ namespace CSCloudServer
 
             OperationContext.Current.Channel.Faulted += (sender, args) =>
                 {
-                    logRequest(request, CSCloudSeverity.ERROR, string.Format("CLient: {0} has faulted :\n", clientName, args.ToString()));
+                    LogRequest(request, CSCloudSeverity.ERROR, string.Format("CLient: {0} has faulted :\n", clientName, args.ToString()));
                     Console.WriteLine("{0} - Client '{1}' connection failed.", DateTime.Now, clientName);
                 };
             OperationContext.Current.Channel.Closed += (sender, args) =>
                 {
-                    logRequest(request, CSCloudSeverity.ERROR, string.Format("Client: {0} has closed", clientName));
+                    LogRequest(request, CSCloudSeverity.ERROR, string.Format("Client: {0} has closed", clientName));
                     Console.WriteLine("{0} - Client '{1}' connection closed.", DateTime.Now, clientName);
                 };
 
@@ -79,14 +82,16 @@ namespace CSCloudServer
             return true;
         }
 
-        public void Disconnect()
+        public void Disconnect(string ClientName)
         {
             var callback = OperationContext.Current.GetCallbackChannel<ICSCloudClient>();
             CSCloudRequest request = new CSCloudRequest();
             request.ClientName = callback.GetName();
             request.Command = new CSCloudCommand();
             request.Command.Code = CSCloudCommandCode.DISCONNECT;
-            logRequest(request, CSCloudSeverity.INFO, string.Format("Client: {0} has disconnected", request.ClientName));
+            LogRequest(request, CSCloudSeverity.INFO, string.Format("Client: {0} has disconnected", request.ClientName));
+
+            if (ClientDisconnected != null) ClientDisconnected(this, new ClientConnectedEventArgs(callback));
         }
 
         /// <summary>
@@ -127,27 +132,33 @@ namespace CSCloudServer
 
             try
             {
-                logRequest(request, CSCloudSeverity.INFO, string.Format("Client: {0} has been sent Command: {1}", client.GetName(), request.ToString()));
-
+                LogRequest(request, CSCloudSeverity.INFO, string.Format("Client: {0} has been sent Command: {1}", client.GetName(), request.ToString()));
                 response = client.ExecuteCommand(request);
-                logCommand(client.GetName(), response);
+                LogResponse(response, CSCloudSeverity.INFO);
 
                 if (CommandSent != null) CommandSent(this, new CommandSentEventArgs(client, command));
             }
             catch (Exception ex)
             {
-                logRequest(request, CSCloudSeverity.ERROR, ex.Message, ex.StackTrace);
+                LogResponse(response, CSCloudSeverity.ERROR, ex.Message, ex.StackTrace);
             }
 
             return response;
         }
 
-        private void logCommand(string clientName, CSCloudResponse response)
+        private void saveResponse(string clientName, CSCloudResponse response)
         {
-            using (CSCloudEntities db = new CSCloudEntities())
+            try
             {
-                db.Commands.Add(CommandToModel(clientName, response.Request.Command, response.Result));
-                db.SaveChanges();
+                using (CSCloudEntities db = new CSCloudEntities())
+                {
+                    db.Commands.Add(CommandToModel(clientName, response.Request.Command, response.Result));
+                    db.SaveChanges();
+                }
+            }
+            catch
+            {
+
             }
         }
 
@@ -160,19 +171,6 @@ namespace CSCloudServer
             c.Result = result.ToString();
 
             return c;
-        }
-
-        private static void logRequest(CSCloudRequest request, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
-        {
-            CSCloudLogEntry log = new CSCloudLogEntry();
-            log.Date = DateTime.UtcNow;
-            log.Severity = severity;
-            StringBuilder sb = new StringBuilder();
-            if (message != null) sb.AppendLine().Append(message);
-            else sb.Append(request.ToString());
-            if (stackTrace != null) sb.AppendLine().AppendLine(stackTrace);
-            log.Message = sb.ToString();
-            logService.Log(log);
         }
 
         //public ICSCloudServerCallback Callback
@@ -188,6 +186,12 @@ namespace CSCloudServer
             clients.Add(args.ConnectedClient);
         }
 
+        private void CSCloudClientDisconnected(object sender, ClientConnectedEventArgs args)
+        {
+            bool removed = clients.Remove(args.ConnectedClient);
+            Debug.WriteLine(string.Format("Disconnected client removed successfully: {0}", removed));
+        }
+
         private void CSCloudCommandSent(object sender, CommandSentEventArgs args)
         {
             Task.Factory.StartNew(() =>
@@ -201,27 +205,97 @@ namespace CSCloudServer
         {
             if (e.ListChangedType == ListChangedType.ItemAdded)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    Thread.Sleep(CommandDelay);
-                    SendFirstCommand(clients[e.NewIndex]);
-                });
+                Thread.Sleep(CommandDelay);
+                SendFirstCommand(clients[e.NewIndex]);
             }
-
             else if (e.ListChangedType == ListChangedType.ItemDeleted)
             {
-                //NOOP
+                Thread.Sleep(CommandDelay);
+                //TODO JBG Has the client already been removed from the list ?
+                //TODO JBG logCommand(e.)
             }
         }
 
         public CSCloudCommandRecord[] GetExecutedCommands()
         {
-            throw new NotImplementedException();
+            using (CSCloudEntities db = new CSCloudEntities())
+            {
+                var commands = new List<CSCloudCommandRecord>(db.Commands.Count());
+                foreach (var c in db.Commands)
+                {
+                    commands.Add(ModelToCommandRecord(c));
+                }
+
+                return commands.ToArray();
+            }
+        }
+
+        private CSCloudCommandRecord ModelToCommandRecord(Command c)
+        {
+            return new CSCloudCommandRecord
+            {
+                ClientName = c.Client.Name,
+                Code = (CSCloud.Enums.CSCloudCommandCode)Enum.Parse(typeof(CSCloud.Enums.CSCloudCommandCode), c.Code, true),
+                Date = c.Date,
+                Result = (CSCloud.Enums.CSCloudResult)Enum.Parse(typeof(CSCloud.Enums.CSCloudResult), c.Result, true),
+            };
         }
 
         public CSCloudClientRecord[] GetClients(bool OnlyActive)
         {
-            throw new NotImplementedException();
+            using (CSCloudEntities db = new CSCloudEntities())
+            {
+                var dbClients = db.Clients;
+                var cls = new List<CSCloudClientRecord>(dbClients.Count());
+
+                foreach (var c in dbClients)
+                {
+                    cls.Add(CreateClientRecord(c.Name, ((ICommunicationObject)c).State == CommunicationState.Opened));
+                }
+
+                return OnlyActive ? cls.Where(c => c.IsActive).ToArray() : cls.ToArray();
+            }
+        }
+
+        private CSCloudClientRecord CreateClientRecord(string clientName, bool isActive)
+        {
+            return new CSCloudClientRecord
+            {
+                ClientName = clientName,
+                IsActive = isActive,
+            };
+        }
+
+        public void LogResponse(CSCloudResponse response, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
+        {
+            if (logService == null) return;
+
+            try
+            {
+                if (response == null) throw new ArgumentNullException("response");
+
+                logService.Log(CSCloudLogEntry.FromResponse(response, severity, message, stackTrace));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(string.Format("Could not log response to Log Service: {2}\n{0}\n{1}", ex.Message, ex.StackTrace, response.ToString()));
+            }
+        }
+
+        public void LogRequest(CSCloudRequest request, CSCloud.Enums.CSCloudSeverity severity, string message = null, string stackTrace = null)
+        {
+            if (logService == null) return;
+
+            try
+            {
+                if (request == null) throw new ArgumentNullException("request");
+
+                logService.Log(CSCloudLogEntry.FromRequest(request, severity, message, stackTrace));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(string.Format("Could not log request to Log Service: {2}\n{0}\n{1}", ex.Message, ex.StackTrace, request.ToString()));
+            }
         }
     }
 }

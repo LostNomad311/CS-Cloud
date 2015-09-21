@@ -11,9 +11,19 @@
   <wsdl:message name="ICSCloudLogService_Log_InputMessage">
     <wsdl:part name="parameters" element="tns:Log" />
   </wsdl:message>
+  <wsdl:message name="ICSCloudLogService_GetLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLog" />
+  </wsdl:message>
+  <wsdl:message name="ICSCloudLogService_GetLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogResponse" />
+  </wsdl:message>
   <wsdl:portType name="ICSCloudLogService">
     <wsdl:operation name="Log">
       <wsdl:input wsaw:Action="http://tempuri.org/ICSCloudLogService/Log" message="tns:ICSCloudLogService_Log_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLog">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICSCloudLogService/GetLog" message="tns:ICSCloudLogService_GetLog_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICSCloudLogService/GetLogResponse" message="tns:ICSCloudLogService_GetLog_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_ICSCloudLogService" type="tns:ICSCloudLogService">
@@ -23,6 +33,15 @@
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="GetLog">
+      <soap:operation soapAction="http://tempuri.org/ICSCloudLogService/GetLog" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="CSCloudLogService">

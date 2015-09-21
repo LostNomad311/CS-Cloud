@@ -398,10 +398,10 @@ namespace CSCloudAdmin.CSCloudServerProxy {
         System.Threading.Tasks.Task<bool> ConnectAsync(string clientName, string password);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, IsInitiating=false, Action="http://tempuri.org/ICSCloudServer/Disconnect")]
-        void Disconnect();
+        void Disconnect(string ClientName);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, IsInitiating=false, Action="http://tempuri.org/ICSCloudServer/Disconnect")]
-        System.Threading.Tasks.Task DisconnectAsync();
+        System.Threading.Tasks.Task DisconnectAsync(string ClientName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICSCloudServer/GetExecutedCommands", ReplyAction="http://tempuri.org/ICSCloudServer/GetExecutedCommandsResponse")]
         CSCloudAdmin.CSCloudServerProxy.CSCloudCommandRecord[] GetExecutedCommands();
@@ -462,12 +462,12 @@ namespace CSCloudAdmin.CSCloudServerProxy {
             return base.Channel.ConnectAsync(clientName, password);
         }
         
-        public void Disconnect() {
-            base.Channel.Disconnect();
+        public void Disconnect(string ClientName) {
+            base.Channel.Disconnect(ClientName);
         }
         
-        public System.Threading.Tasks.Task DisconnectAsync() {
-            return base.Channel.DisconnectAsync();
+        public System.Threading.Tasks.Task DisconnectAsync(string ClientName) {
+            return base.Channel.DisconnectAsync(ClientName);
         }
         
         public CSCloudAdmin.CSCloudServerProxy.CSCloudCommandRecord[] GetExecutedCommands() {
